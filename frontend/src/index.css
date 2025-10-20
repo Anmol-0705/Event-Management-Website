@@ -1,0 +1,20 @@
+/* ./src/index.css - UPDATED for Tailwind CSS v4 */
+
+/* 1. REPLACE ALL @tailwind directives with this single line */
+/* @import "tailwindcss";
+ */
+ 
+
+/* 2. Your custom CSS with @apply follows */
+
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Your custom styles */
+/* ... */
+body { @apply bg-gray-50 text-gray-800; }
+.container { @apply max-w-4xl mx-auto p-4; }
+.card { @apply bg-white shadow rounded p-4; }
+button { @apply bg-blue-600 text-white px-3 py-1 rounded; }
