@@ -13,10 +13,23 @@ router.post('/', auth('organizer'), async (req, res) => {
   } catch (err) { res.status(500).json({ message: err.message }); }
 });
 
-// Read all events (public)
+// // Read all events (public)
+// router.get('/', async (req, res) => {
+//   const events = await Event.find().populate('organizer', 'name email');
+//   res.json(events);
+// });
+
 router.get('/', async (req, res) => {
-  const events = await Event.find().populate('organizer', 'name email');
-  res.json(events);
+  try {
+    // Only show events that are NOT rejected
+    const events = await Event.find({ status: { $ne: 'rejected' } })
+      .populate('organizer', 'name email');
+      
+    res.json(events);
+  } catch (error) {
+    console.error("Error fetching events:", error);
+    res.status(500).json({ message: "Error fetching events" });
+  }
 });
 
 // Read single event
