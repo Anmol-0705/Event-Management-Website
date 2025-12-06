@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 
 /**
  * Organizer dashboard: dedicated area for organizers to manage their events.
- * Requires backend endpoint: GET /api/events/mine (auth middleware)
+ * 
  */
 
 export default function OrganizerDashboard({ token }) {
