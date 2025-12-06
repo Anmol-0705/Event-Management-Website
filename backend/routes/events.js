@@ -348,11 +348,61 @@ router.get('/:id', async (req, res) => {
 });
 
 // Update event (organizer-owner or admin). Accept poster via form-data too.
+// router.put('/:id', auth(['organizer', 'admin']), upload.single('poster'), async (req, res) => {
+//   try {
+//     const ev = await Event.findById(req.params.id);
+//     if (!ev) return res.status(404).json({ message: 'Not found' });
+
+//     if (req.user.role === 'organizer' && ev.organizer.toString() !== req.user._id.toString()) {
+//       return res.status(403).json({ message: 'Not allowed' });
+//     }
+
+//     // Replace poster if uploaded
+//     if (req.file) {
+//       const posterPath = `/uploads/${req.file.filename}`;
+//       // optional: delete old file
+//       if (ev.poster && ev.poster.startsWith('/uploads/')) {
+//         try {
+//           const old = path.join(__dirname, '..', ev.poster.slice(1));
+//           if (fs.existsSync(old)) fs.unlinkSync(old);
+//         } catch (e) {
+//           console.warn('Failed to remove old poster', e);
+//         }
+//       }
+//       ev.poster = posterPath;
+//       await EventLog.create({ event: ev._id, action: 'poster-updated', by: req.user._id, reason: 'poster replaced' });
+//     }
+
+//     // Safe update fields
+//     const allowed = ['title', 'description', 'price', 'date', 'location', 'venue', 'capacity'];
+//     allowed.forEach((f) => {
+//       if (typeof req.body[f] !== 'undefined') {
+//         ev[f] = f === 'price' || f === 'capacity' ? Number(req.body[f]) : req.body[f];
+//       }
+//     });
+
+//     // If organizer edits, optionally change status back to pending for re-review.
+//     if (req.user.role === 'organizer') {
+//       ev.status = 'pending';
+//     }
+
+//     await ev.save();
+//     await EventLog.create({ event: ev._id, action: 'updated', by: req.user._id, reason: req.body.reason || 'edited' });
+
+//     res.json(ev);
+//   } catch (err) {
+//     console.error('Error updating event:', err);
+//     res.status(500).json({ message: err.message });
+//   }
+// });
+
+// Update event (organizer-owner or admin). Accept poster via form-data too.
 router.put('/:id', auth(['organizer', 'admin']), upload.single('poster'), async (req, res) => {
   try {
     const ev = await Event.findById(req.params.id);
     if (!ev) return res.status(404).json({ message: 'Not found' });
 
+    // only admin or organizer-owner can edit
     if (req.user.role === 'organizer' && ev.organizer.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Not allowed' });
     }
@@ -373,7 +423,7 @@ router.put('/:id', auth(['organizer', 'admin']), upload.single('poster'), async 
       await EventLog.create({ event: ev._id, action: 'poster-updated', by: req.user._id, reason: 'poster replaced' });
     }
 
-    // Safe update fields
+    // Safe update fields (do NOT change status automatically)
     const allowed = ['title', 'description', 'price', 'date', 'location', 'venue', 'capacity'];
     allowed.forEach((f) => {
       if (typeof req.body[f] !== 'undefined') {
@@ -381,10 +431,9 @@ router.put('/:id', auth(['organizer', 'admin']), upload.single('poster'), async 
       }
     });
 
-    // If organizer edits, optionally change status back to pending for re-review.
-    if (req.user.role === 'organizer') {
-      ev.status = 'pending';
-    }
+    // IMPORTANT: do NOT force status change here.
+    // If you want edits by organizers to trigger re-review, set ev.status = 'pending' here.
+    // But per your requirement, we keep the existing status (so approved stays approved).
 
     await ev.save();
     await EventLog.create({ event: ev._id, action: 'updated', by: req.user._id, reason: req.body.reason || 'edited' });
@@ -395,6 +444,7 @@ router.put('/:id', auth(['organizer', 'admin']), upload.single('poster'), async 
     res.status(500).json({ message: err.message });
   }
 });
+
 
 // Poster-specific endpoints (admin/organizer-owner)
 router.put('/:id/poster', auth(['organizer', 'admin']), upload.single('poster'), async (req, res) => {
