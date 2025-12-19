@@ -28,8 +28,11 @@ const eventSchema = new mongoose.Schema({
   price: { type: Number, default: 0 }, // in rupees
   poster: String,           // store "/uploads/filename" (relative) or absolute URL
   organizer: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  status: { type: String, enum: ['pending','approved','rejected'], default: 'pending' },
-  createdAt: { type: Date, default: Date.now }
+  status: { type: String, enum: ['pending', 'approved', 'rejected'], default: 'pending' },
+  createdAt: { type: Date, default: Date.now },
+  lastEditReason: { type: String },
+  lastEditedAt: { type: Date }
+
 });
 
 module.exports = mongoose.model('Event', eventSchema);

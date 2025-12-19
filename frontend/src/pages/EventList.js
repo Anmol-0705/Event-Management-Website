@@ -534,6 +534,18 @@ export default function EventList({ token }) {
       .catch(() => setEvents([]));
   }, []);
 
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetch('http://localhost:5000/api/events')
+        .then((r) => r.json())
+        .then((data) => setEvents(Array.isArray(data) ? data : []))
+        .catch(() => { });
+    }, 15000); // refresh every 15 seconds
+
+    return () => clearInterval(interval);
+  }, []);
+
   async function register(ev) {
     if (!token) return alert('Please login to register');
 
@@ -654,13 +666,12 @@ export default function EventList({ token }) {
               {/* Bottom: status + buttons */}
               <div className="mt-4 flex items-center justify-between gap-3">
                 <span
-                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                    ev.status === 'approved'
+                  className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${ev.status === 'approved'
                       ? 'bg-green-50 text-green-700'
                       : ev.status === 'pending'
-                      ? 'bg-yellow-50 text-yellow-700'
-                      : 'bg-red-50 text-red-700'
-                  }`}
+                        ? 'bg-yellow-50 text-yellow-700'
+                        : 'bg-red-50 text-red-700'
+                    }`}
                 >
                   {ev.status}
                 </span>

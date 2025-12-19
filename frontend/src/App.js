@@ -107,17 +107,141 @@
 
 // export default App;
 
+// import React, { useState } from 'react';
+// import { Toaster } from 'react-hot-toast';
+
+// import EventList from './pages/EventList';
+// import Login from './pages/Login';
+// import Register from './pages/Register';
+// import OrganizerDashboard from './pages/EventCreate';
+// import AdminDashboard from './pages/AdminDashboard';
+// import MyRegistrations from './pages/MyRegistrations';
+
+// function App() {
+//   const [token, setToken] = useState(localStorage.getItem('token'));
+//   const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || 'null'));
+
+//   const onLogin = (t, u) => {
+//     setToken(t);
+//     setUser(u);
+//     localStorage.setItem('token', t);
+//     localStorage.setItem('user', JSON.stringify(u));
+//   };
+
+//   const logout = () => {
+//     setToken(null);
+//     setUser(null);
+//     localStorage.removeItem('token');
+//     localStorage.removeItem('user');
+//   };
+
+//   return (
+
+
+//     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-white text-gray-800 antialiased">
+//       {/* full-width container, only side padding */}
+//       <div className="w-full px-4 sm:px-8 lg:px-12 py-8">
+//         {/* Header */}
+//         <div className="bg-white rounded-3xl shadow-lg p-6 border border-gray-100 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+//           <div>
+//             <h1 className="text-4xl font-extrabold tracking-tight text-gray-800">
+//               EventHub
+//             </h1>
+//             <p className="text-sm text-gray-500 mt-1">
+//               Manage and discover events — clean, simple and professional.
+//             </p>
+//           </div>
+
+//           <div className="flex items-center gap-4">
+//             {token ? (
+//               <>
+//                 <div className="text-sm text-gray-700">
+//                   Hi <span className="font-medium">{user?.name}</span>{' '}
+//                   <span className="text-xs text-gray-400">({user?.role})</span>
+//                 </div>
+
+//                 <button
+//                   onClick={logout}
+//                   className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition transform hover:-translate-y-[1px]"
+//                 >
+//                   Logout
+//                 </button>
+//               </>
+//             ) : (
+//               <div className="text-sm text-gray-600">
+//                 Sign in or create an account to register for events
+//               </div>
+//             )}
+//           </div>
+//         </div>
+
+//         {/* Main grid: events (left) + sidebar (right) */}
+//         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+//           {/* Events area spans 8/12 on large screens */}
+//           <div className="lg:col-span-8">
+//             <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+//               <EventList token={token} />
+//             </div>
+//           </div>
+
+//           {/* Sidebar spans 4/12 on large screens */}
+//           <aside className="lg:col-span-4 space-y-6">
+//             {!token ? (
+//               <>
+//                 <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+//                   <Login onLogin={onLogin} />
+//                 </div>
+//                 <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+//                   <Register />
+//                 </div>
+//               </>
+//             ) : (
+//               <>
+//                 {user?.role === 'organizer' && (
+//                   <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+//                     <OrganizerDashboard token={token} />
+//                   </div>
+//                 )}
+
+//                 {user?.role === 'admin' && (
+//                   <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
+//                     <AdminDashboard token={token} />
+//                   </div>
+//                 )}
+
+//                 <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
+//                   <MyRegistrations token={token} />
+//                 </div>
+//               </>
+//             )}
+//           </aside>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
+
+
+
 import React, { useState } from 'react';
+import { Toaster } from 'react-hot-toast';
+
 import EventList from './pages/EventList';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import OrganizerDashboard from './pages/EventCreate';
+import OrganizerDashboard from './pages/OrganizerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import MyRegistrations from './pages/MyRegistrations';
 
 function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user') || 'null'));
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem('user') || 'null')
+  );
 
   const onLogin = (t, u) => {
     setToken(t);
@@ -134,88 +258,94 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-white text-gray-800 antialiased">
-      {/* full-width container, only side padding */}
-      <div className="w-full px-4 sm:px-8 lg:px-12 py-8">
-        {/* Header */}
-        <div className="bg-white rounded-3xl shadow-lg p-6 border border-gray-100 mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-extrabold tracking-tight text-gray-800">
-              EventHub
-            </h1>
-            <p className="text-sm text-gray-500 mt-1">
-              Manage and discover events — clean, simple and professional.
-            </p>
-          </div>
+    <>
+      <Toaster position="top-right" />
 
-          <div className="flex items-center gap-4">
-            {token ? (
-              <>
-                <div className="text-sm text-gray-700">
-                  Hi <span className="font-medium">{user?.name}</span>{' '}
-                  <span className="text-xs text-gray-400">({user?.role})</span>
-                </div>
-
-                <button
-                  onClick={logout}
-                  className="inline-flex items-center gap-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition transform hover:-translate-y-[1px]"
-                >
-                  Logout
-                </button>
-              </>
-            ) : (
-              <div className="text-sm text-gray-600">
-                Sign in or create an account to register for events
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* Main grid: events (left) + sidebar (right) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          {/* Events area spans 8/12 on large screens */}
-          <div className="lg:col-span-8">
-            <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
-              <EventList token={token} />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-indigo-50 to-white text-gray-800">
+        {/* FULL WIDTH WRAPPER */}
+        <div className="w-full px-4 sm:px-6 lg:px-10 py-6">
+          {/* HEADER */}
+          <header className="bg-white rounded-3xl shadow-lg p-6 border border-gray-100 mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                EventHub
+              </h1>
+              <p className="text-sm text-gray-500 mt-1">
+                Manage and discover events — clean, simple and professional.
+              </p>
             </div>
-          </div>
 
-          {/* Sidebar spans 4/12 on large screens */}
-          <aside className="lg:col-span-4 space-y-6">
-            {!token ? (
-              <>
-                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                  <Login onLogin={onLogin} />
-                </div>
-                <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
-                  <Register />
-                </div>
-              </>
-            ) : (
-              <>
-                {user?.role === 'organizer' && (
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
-                    <OrganizerDashboard token={token} />
+            <div className="flex items-center gap-4">
+              {token ? (
+                <>
+                  <div className="text-sm text-gray-700">
+                    Hi <span className="font-medium">{user?.name}</span>{' '}
+                    <span className="text-xs text-gray-400">
+                      ({user?.role})
+                    </span>
                   </div>
-                )}
 
-                {user?.role === 'admin' && (
-                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100 mb-4">
-                    <AdminDashboard token={token} />
-                  </div>
-                )}
-
-                <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-100">
-                  <MyRegistrations token={token} />
+                  <button
+                    onClick={logout}
+                    className="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg font-medium transition"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <div className="text-sm text-gray-600">
+                  Sign in or create an account to register for events
                 </div>
-              </>
-            )}
-          </aside>
+              )}
+            </div>
+          </header>
+
+          {/* MAIN GRID */}
+          <main className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            {/* EVENTS SECTION */}
+            <section className="lg:col-span-8 order-1">
+              <div className="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
+                <EventList token={token} />
+              </div>
+            </section>
+
+            {/* SIDEBAR */}
+            <aside className="lg:col-span-4 order-2 space-y-6 lg:sticky lg:top-6 h-fit">
+              {!token ? (
+                <>
+                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <Login onLogin={onLogin} />
+                  </div>
+
+                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <Register />
+                  </div>
+                </>
+              ) : (
+                <>
+                  {user?.role === 'organizer' && (
+                    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                      <OrganizerDashboard token={token} />
+                    </div>
+                  )}
+
+                  {user?.role === 'admin' && (
+                    <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                      <AdminDashboard token={token} />
+                    </div>
+                  )}
+
+                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-100">
+                    <MyRegistrations token={token} />
+                  </div>
+                </>
+              )}
+            </aside>
+          </main>
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
 export default App;
-
